@@ -1,5 +1,5 @@
 {
-  "name": "broody-promise",
+  "name": "broody-promises",
   "version": "0.1.0",
   "description": "Broody implementation of Promises/A+",
   "main": "./src/promise.js",
@@ -11,11 +11,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gobwas/broody-promise.git"
+    "url": "https://github.com/gobwas/broody-promises.git"
   },
   "keywords": [
-    "Promises",
-    "A+",
+    "promises",
+    "a+",
     "stub",
     "synchronous",
     "emulation"
@@ -23,9 +23,9 @@
   "author": "Sergey Kamardin <gobwas@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gobwas/broody-promise/issues"
+    "url": "https://github.com/gobwas/broody-promises/issues"
   },
-  "homepage": "https://github.com/gobwas/broody-promise",
+  "homepage": "https://github.com/gobwas/broody-promises",
   "dependencies": {
     "lodash": "^2.4.1"
   },
