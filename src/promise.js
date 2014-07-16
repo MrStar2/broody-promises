@@ -83,6 +83,11 @@ Promise.all = function(promises, strict) {
 
 		results = new Array(len);
 
+		if (!remaining) {
+			resolve(results);
+			return;
+		}
+
 		for (i = 0; i < len; i++) {
 			promises[i]
 				.then(function(value) {
