@@ -33,7 +33,7 @@ npm install --save broody-promises
 			return value + "!";
 		});
 
-	chain.brood(); // "my value!";
+	chain.done(); // "my value!";
 
 ```
 
@@ -66,6 +66,10 @@ Resolve callack.
 Type: `Function`
 
 Reject callack.
+
+### done()
+
+Returns resolved value.
 
 ### catch(onReject)
 

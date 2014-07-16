@@ -309,7 +309,7 @@ describe("Promise", function() {
 		
 	});
 
-	describe("#brood", function() {
+	describe("#done", function() {
 
 		it("should return resolved value", function() {
 			var promise, val;
@@ -320,7 +320,7 @@ describe("Promise", function() {
 				resolve(val);
 			});
 
-			assert.equal(val, promise.brood());
+			assert.equal(val, promise.done());
 		});
 
 		it("should return resolved value", function() {
@@ -342,7 +342,7 @@ describe("Promise", function() {
 				.catch(function() {
 					return val;
 				})
-				.brood();
+				.done();
 
 			assert.equal(value, val);
 		});

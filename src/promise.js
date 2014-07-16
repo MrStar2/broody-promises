@@ -60,7 +60,7 @@ Promise.prototype = {
     	return this.then(null, onReject);
     },
 
-    "brood": function() {
+    "done": function() {
     	if (!this._state) {
     		throw new Erorr("Can not retreive value from not fullfilled promise");
     	}
