@@ -1,6 +1,6 @@
 {
   "name": "broody-promises",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Broody implementation of Promises/A+",
   "main": "./src/promise.js",
   "directories": {
