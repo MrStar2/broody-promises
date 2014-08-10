@@ -230,9 +230,7 @@ describe("Promise", function() {
 				resolve(aVal);
 			});
 
-			b = new Promise(function(resolve) {
-				resolve(bVal);
-			});
+			b = bVal;
 
 			Promise.all([a, b])
 				.then(function(results) {

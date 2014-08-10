@@ -71,15 +71,17 @@ Promise.prototype = {
 
 Promise.all = function(promises, strict) {
 	return new Promise(function(resolve, reject) {
-		var i, len, results, remaining, rejected;
-		
+		var i, len, results, remaining, rejected,
+            target, getComplete, complete, next;
+
 		len       = promises.length;
 		remaining = len;
 		rejected  = false;
+        strict    = _.isBoolean(strict) ? strict : true;
 
 		if (!_.isArray(promises)) {
 			throw new TypeError("Array is expected");
-		};
+		}
 
 		results = new Array(len);
 
@@ -88,39 +90,53 @@ Promise.all = function(promises, strict) {
 			return;
 		}
 
-		for (i = 0; i < len; i++) {
-			promises[i]
-				.then(function(value) {
-					return results[i] = value;
-				})
-				.catch(function(error) {
-					if (strict && !rejected) {
-						reject(error);
-						rejected = true;
-					}
-				})
-				.finally(function(error, value) {
-					remaining--;
+        getComplete = function(i) {
+            return function(value) {
+                results[i] = value;
+            }
+        };
 
-					if (remaining === 0 && !rejected) {
-						resolve(results);
-					}
-				});
+        next = function() {
+            remaining--;
+
+            if (remaining === 0 && !rejected) {
+                resolve(results);
+            }
+        };
+
+		for (i = 0; i < len; i++) {
+            target = promises[i];
+            complete = getComplete(i);
+
+            if (target instanceof Promise) {
+                target
+                    .then(complete)
+                    .catch(function(error) {
+                        if (strict && !rejected) {
+                            reject(error);
+                            rejected = true;
+                        }
+                    })
+                    .finally(next);
+            } else {
+                complete(target);
+                next();
+            }
 		}
-	
+
 	});
-}
+};
 
 Promise.resolve = function(value) {
 	return new Promise(function(resolve) {
 		resolve(value);
 	});
-}
+};
 
 Promise.reject = function(err) {
 	return new Promise(function(resolve, reject) {
 		reject(err);
 	});
-}
+};
 
 module.exports = Promise;
