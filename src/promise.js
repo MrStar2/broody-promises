@@ -70,6 +70,10 @@ Promise.prototype = {
 
     "done": function() {
     	if (!this._state) {
+            if (this._error) {
+                throw this._error;
+            }
+            
     		throw new Error("Can not retreive value from not fullfilled promise");
     	}
 

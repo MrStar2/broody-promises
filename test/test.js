@@ -352,6 +352,40 @@ describe("Promise", function() {
 			assert.equal(value, val);
 		});
 
+		it("should throw error on not fullfilled", function() {
+			var promise, val, value, err;
+
+			val = chance.word();
+
+			promise = new Promise(function() {});
+
+			try {
+				promise.done()
+			} catch (_err) {
+				err = _err;
+			}
+
+			assert.instanceOf(err, Error);
+		});
+
+		it("should throw _error", function() {
+			var promise, val, value, err, _error;
+
+			_error = new Error("HAHAHA");
+
+			val = chance.word();
+
+			promise = new Promise(function(resolve, reject) {reject(_error);});
+
+			try {
+				promise.done()
+			} catch (_err) {
+				err = _err;
+			}
+
+			assert.strictEqual(err, _error);
+		});
+
 	});
 
 });
