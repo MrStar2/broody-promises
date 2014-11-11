@@ -9,7 +9,8 @@ var _          = require("lodash"),
     Promise;
 
 Promise = function(resolver, options) {
-	var self = this;
+	var self = this,
+        doResolve, doReject;
 
 	if (!(this instanceof Promise)) {
       throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
@@ -27,7 +28,14 @@ Promise = function(resolver, options) {
     this._value = null;
     this._error = null;
 
-    resolver(resolve(this), reject(this));
+    doResolve = resolve(this);
+    doReject  = reject(this);
+
+    try {
+        resolver(doResolve, doReject);
+    } catch (err) {
+        doReject(err);
+    }
 };
 
 Promise.DEFAULTS = {};

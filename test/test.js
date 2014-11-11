@@ -16,6 +16,13 @@ describe("Promise", function() {
 			assert.instanceOf(promise, Promise);
 		});
 
+		it("should return rejected Promise on error in resolver", function() {
+			var promise;
+
+			promise = new Promise(function() { makeError(); });
+
+			assert.isFalse(promise._state);
+		});
 	});
 
 	describe("#then", function() {
