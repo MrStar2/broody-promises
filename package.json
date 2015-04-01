@@ -1,13 +1,13 @@
 {
   "name": "broody-promises",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Broody implementation of Promises/A+",
   "main": "./src/promise.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "mocha ./test"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",

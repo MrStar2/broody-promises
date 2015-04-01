@@ -1,367 +1,391 @@
 var assert  = require("chai").assert,
-    chance  = new require("chance")(),
-    Promise = require("../src/promise");
+	chance  = new require("chance")(),
+	Promise = require("../src/promise");
 
 function noop() {};
 
 describe("Promise", function() {
 
-    describe("#constructor", function() {
+	describe("#constructor", function() {
+		
+		it("should return Promise", function() {
+			var promise;
+
+			promise = new Promise(noop);
+
+			assert.instanceOf(promise, Promise);
+		});
+
+		it("should return rejected Promise on error in resolver", function() {
+			var promise;
+
+			promise = new Promise(function() { makeError(); });
+
+			assert.isFalse(promise._state);
+		});
+	});
+
+	describe("#then", function() {
+		
+		it("should return Promise", function() {
+			var promise,
+				chain;
+
+			promise = new Promise(noop);
+			chain = promise.then(noop);
+
+			assert.instanceOf(chain, Promise);
+			assert.notEqual(chain, promise);
+		});
+
+		it("should be resolved after previous", function(done) {
+			var promise, 
+				val;
+
+			val = chance.word();
+
+			promise = new Promise(function(resolve) {
+				resolve(val);
+			});
+
+			promise
+				.then(function(value) {
+					var error;
+
+					try {
+						assert.equal(value, val);
+					} catch (err) {
+						error = err;
+					}
+					
+					done(error);
+				});
+		});
+
+		it("should be rejected after previous", function(done) {
+			var promise, 
+				err;
+
+			err = new Error(chance.word());
+
+			promise = new Promise(function(resolve, reject) {
+				reject(err);
+			});
+
+			promise
+				.then(null, function(error) {
+					var _error;
+
+					try {
+						assert.strictEqual(error, err);
+					} catch (err) {
+						_error = err;
+					}
+					
+					done(_error);
+				});
+		});
+
+		it("should not be called after previous rejection", function(done) {
+			var promise, 
+				err, val;
+
+			err = new Error(chance.word());
+			val = chance.word();
+
+			promise = new Promise(function(resolve, reject) {
+				reject(err);
+			});
+
+			promise
+				.then(function() {
+					done(new Error("Called!"));
+				})
+				.catch(function() {
+					done();
+				});
+		});
+
+	});
+
+	describe("#catch", function() {
+
+		it("should be called on rejection", function(done) {
+			var promise, 
+				err;
+
+			err = new Error(chance.word());
+
+			promise = new Promise(function(resolve, reject) {
+				reject(err);
+			});
+
+			promise
+				.catch(function(error) {
+					var _error;
+
+					try {
+						assert.strictEqual(error, err);
+					} catch (err) {
+						_error = err;
+					}
+					
+					done(_error);
+				});
+		});
 
-        it("should return Promise", function() {
-            var promise;
 
-            promise = new Promise(noop);
+		it("should be chained properly on rejection", function(done) {
+			var promise, 
+				val;
 
-            assert.instanceOf(promise, Promise);
-        });
+			val = chance.word();
 
-    });
+			promise = new Promise(function(resolve, reject) {
+				reject();
+			});
 
-    describe("#then", function() {
+			promise
+				.catch(function() {
+					return val;
+				})
+				.then(function(value) {
+					var error;
+
+					try {
+						assert.equal(value, val);
+					} catch (err) {
+						error = err;
+					}
+					
+					done(error);
+				});
+		});
+
+	});
+
+
+	describe("#finally", function() {
 
-        it("should return Promise", function() {
-            var promise,
-                chain;
+		it("should be called on rejection", function(done) {
+			var promise, 
+				err;
 
-            promise = new Promise(noop);
-            chain = promise.then(noop);
+			err = new Error(chance.word());
 
-            assert.instanceOf(chain, Promise);
-            assert.notEqual(chain, promise);
-        });
+			promise = new Promise(function(resolve, reject) {
+				reject(err);
+			});
 
-        it("should be resolved after previous", function(done) {
-            var promise,
-                val;
+			promise
+				.finally(function(error, value) {
+					var _error;
+
+					try {
+						assert.strictEqual(error, err);
+						assert.isUndefined(value);
+					} catch (err) {
+						_error = err;
+					}
+					
+					done(_error);
+				});
+		});
+
+		it("should be called on resolving", function(done) {
+			var promise, 
+				val;
+
+			val = chance.word();
 
-            val = chance.word();
+			promise = new Promise(function(resolve, reject) {
+				resolve(val);
+			});
 
-            promise = new Promise(function(resolve) {
-                resolve(val);
-            });
+			promise
+				.finally(function(error, value) {
+					var _error;
 
-            promise
-                .then(function(value) {
-                    var error;
+					try {
+						assert.strictEqual(value, val);
+						assert.isNull(error);
+					} catch (err) {
+						_error = err;
+					}
+					
+					done(_error);
+				});
+		});
+
+	});
+
+
+	describe("Promise.all", function() {
 
-                    try {
-                        assert.equal(value, val);
-                    } catch (err) {
-                        error = err;
-                    }
+		it("should return a Promise", function() {
+			assert.instanceOf(Promise.all([]), Promise);
+		});
 
-                    done(error);
-                });
-        });
+		it("should be resolved after all", function(done) {
+			var a, b,
+				aVal, bVal;
 
-        it("should be rejected after previous", function(done) {
-            var promise,
-                err;
+			aVal = chance.word();
+			bVal = chance.word();
 
-            err = new Error(chance.word());
+			a = new Promise(function(resolve) {
+				resolve(aVal);
+			});
 
-            promise = new Promise(function(resolve, reject) {
-                reject(err);
-            });
+			b = bVal;
 
-            promise
-                .then(null, function(error) {
-                    var _error;
+			Promise.all([a, b])
+				.then(function(results) {
+					var _error;
 
-                    try {
-                        assert.strictEqual(error, err);
-                    } catch (err) {
-                        _error = err;
-                    }
+					try {
+						assert.equal(results[0], aVal);
+						assert.equal(results[1], bVal);
+					} catch (err) {
+						_error = err;
+					}
+					
+					done(_error);
+				});
+		});
+
+	});
+
+	describe("Promise.resolve", function() {
 
-                    done(_error);
-                });
-        });
+		it("should return a Promise", function() {
+			assert.instanceOf(Promise.resolve(), Promise);
+		});
 
-        it("should not be called after previous rejection", function(done) {
-            var promise,
-                err, val;
+		it("should be resolved", function(done) {
+			var promise, val;
+
+			val = chance.word();
 
-            err = new Error(chance.word());
-            val = chance.word();
+			promise = Promise.resolve(val);
 
-            promise = new Promise(function(resolve, reject) {
-                reject(err);
-            });
+			promise.then(function(value) {
+				var error;
 
-            promise
-                .then(function() {
-                    done(new Error("Called!"));
-                })
-                .catch(function() {
-                    done();
-                });
-        });
+				try {
+					assert.equal(value, val);
+				} catch (err) {
+					error = err;
+				}
+				
+				done(error);
+			})
+		});
+		
+	});
 
-    });
+	describe("Promise.reject", function() {
 
-    describe("#catch", function() {
+		it("should return a Promise", function() {
+			assert.instanceOf(Promise.reject(), Promise);
+		});
 
-        it("should be called on rejection", function(done) {
-            var promise,
-                err;
+		it("should be resolved", function(done) {
+			var promise, 
+				err;
 
-            err = new Error(chance.word());
+			err = new Error(chance.word());
 
-            promise = new Promise(function(resolve, reject) {
-                reject(err);
-            });
+			promise = new Promise.reject(err);
 
-            promise
-                .catch(function(error) {
-                    var _error;
+			promise
+				.then(null, function(error) {
+					var _error;
 
-                    try {
-                        assert.strictEqual(error, err);
-                    } catch (err) {
-                        _error = err;
-                    }
+					try {
+						assert.strictEqual(error, err);
+					} catch (err) {
+						_error = err;
+					}
+					
+					done(_error);
+				});
+		});
+		
+	});
 
-                    done(_error);
-                });
-        });
+	describe("#done", function() {
 
+		it("should return resolved value", function() {
+			var promise, val;
 
-        it("should be chained properly on rejection", function(done) {
-            var promise,
-                val;
+			val = chance.word();
 
-            val = chance.word();
+			promise = new Promise(function(resolve) {
+				resolve(val);
+			});
 
-            promise = new Promise(function(resolve, reject) {
-                reject();
-            });
+			assert.equal(val, promise.done());
+		});
 
-            promise
-                .catch(function() {
-                    return val;
-                })
-                .then(function(value) {
-                    var error;
+		it("should return resolved value", function() {
+			var promise, val, value;
 
-                    try {
-                        assert.equal(value, val);
-                    } catch (err) {
-                        error = err;
-                    }
+			val = chance.word();
 
-                    done(error);
-                });
-        });
+			promise = new Promise(function(resolve) {
+				resolve();
+			});
 
-    });
+			value = promise
+				.then(function() {
+					return 10;
+				})
+				.then(function() {
+					throw new Error();
+				})
+				.catch(function() {
+					return val;
+				})
+				.done();
 
+			assert.equal(value, val);
+		});
 
-    describe("#finally", function() {
+		it("should throw error on not fullfilled", function() {
+			var promise, val, value, err;
 
-        it("should be called on rejection", function(done) {
-            var promise,
-                err;
+			val = chance.word();
 
-            err = new Error(chance.word());
+			promise = new Promise(function() {});
 
-            promise = new Promise(function(resolve, reject) {
-                reject(err);
-            });
+			try {
+				promise.done()
+			} catch (_err) {
+				err = _err;
+			}
 
-            promise
-                .finally(function(error, value) {
-                    var _error;
+			assert.instanceOf(err, Error);
+		});
 
-                    try {
-                        assert.strictEqual(error, err);
-                        assert.isUndefined(value);
-                    } catch (err) {
-                        _error = err;
-                    }
+		it("should throw _error", function() {
+			var promise, val, value, err, _error;
 
-                    done(_error);
-                });
-        });
+			_error = new Error("HAHAHA");
 
-        it("should be called on resolving", function(done) {
-            var promise,
-                val;
+			val = chance.word();
 
-            val = chance.word();
+			promise = new Promise(function(resolve, reject) {reject(_error);});
 
-            promise = new Promise(function(resolve, reject) {
-                resolve(val);
-            });
+			try {
+				promise.done()
+			} catch (_err) {
+				err = _err;
+			}
 
-            promise
-                .finally(function(error, value) {
-                    var _error;
+			assert.strictEqual(err, _error);
+		});
 
-                    try {
-                        assert.strictEqual(value, val);
-                        assert.isNull(error);
-                    } catch (err) {
-                        _error = err;
-                    }
-
-                    done(_error);
-                });
-        });
-
-    });
-
-
-    describe("Promise.all", function() {
-
-        it("should return a Promise", function() {
-            assert.instanceOf(Promise.all([]), Promise);
-        });
-
-        it("should be resolved after all", function(done) {
-            var a, b,
-                aVal, bVal;
-
-            aVal = chance.word();
-            bVal = chance.word();
-
-            a = new Promise(function(resolve) {
-                resolve(aVal);
-            });
-
-            b = bVal;
-
-            Promise.all([a, b])
-                .then(function(results) {
-                    var _error;
-
-                    try {
-                        assert.equal(results[0], aVal);
-                        assert.equal(results[1], bVal);
-                    } catch (err) {
-                        _error = err;
-                    }
-
-                    done(_error);
-                });
-        });
-
-    });
-
-    describe("Promise.resolve", function() {
-
-        it("should return a Promise", function() {
-            assert.instanceOf(Promise.resolve(), Promise);
-        });
-
-        it("should be resolved", function(done) {
-            var promise, val;
-
-            val = chance.word();
-
-            promise = Promise.resolve(val);
-
-            promise.then(function(value) {
-                var error;
-
-                try {
-                    assert.equal(value, val);
-                } catch (err) {
-                    error = err;
-                }
-
-                done(error);
-            })
-        });
-
-        it("should return passed promise", function(done) {
-            var promise, value;
-
-            value = {};
-
-            promise = new Promise(function(resolve) {
-                resolve(value);
-            });
-
-            Promise
-                .resolve(promise)
-                .then(function(result) {
-                    assert.equal(result, value);
-                })
-                .then(done, done);
-        });
-
-    });
-
-    describe("Promise.reject", function() {
-
-        it("should return a Promise", function() {
-            assert.instanceOf(Promise.reject(), Promise);
-        });
-
-        it("should be resolved", function(done) {
-            var promise,
-                err;
-
-            err = new Error(chance.word());
-
-            promise = new Promise.reject(err);
-
-            promise
-                .then(null, function(error) {
-                    var _error;
-
-                    try {
-                        assert.strictEqual(error, err);
-                    } catch (err) {
-                        _error = err;
-                    }
-
-                    done(_error);
-                });
-        });
-
-    });
-
-    describe("#done", function() {
-
-        it("should return resolved value", function() {
-            var promise, val;
-
-            val = chance.word();
-
-            promise = new Promise(function(resolve) {
-                resolve(val);
-            });
-
-            assert.equal(val, promise.done());
-        });
-
-        it("should return resolved value", function() {
-            var promise, val, value;
-
-            val = chance.word();
-
-            promise = new Promise(function(resolve) {
-                resolve();
-            });
-
-            value = promise
-                .then(function() {
-                    return 10;
-                })
-                .then(function() {
-                    throw new Error();
-                })
-                .catch(function() {
-                    return val;
-                })
-                .done();
-
-            assert.equal(value, val);
-        });
-
-    });
+	});
 
 });
