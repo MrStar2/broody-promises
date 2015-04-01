@@ -1,5 +1,7 @@
 # broody-[promises](http://promises-aplus.github.io/promises-spec/)
 
+[![Build Status](https://travis-ci.org/gobwas/broody-promises.svg?branch=master)](https://travis-ci.org/gobwas/broody-promises)
+
 > Broody implementation of [Promises/A+](http://promises-aplus.github.io/promises-spec/).
 
 ## Whats up?
