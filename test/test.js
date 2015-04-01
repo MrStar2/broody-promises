@@ -281,6 +281,23 @@ describe("Promise", function() {
 				done(error);
 			})
 		});
+
+        it("should return passed promise", function(done) {
+            var promise, value;
+
+            value = {};
+
+            promise = new Promise(function(resolve) {
+                resolve(value);
+            });
+
+            Promise
+                .resolve(promise)
+                .then(function(result) {
+                    assert.equal(result, value);
+                })
+                .then(done, done);
+        });
 		
 	});
 
