@@ -128,6 +128,10 @@ Promise.all = function(promises, strict) {
 };
 
 Promise.resolve = function(value) {
+    if (value instanceof Promise) {
+        return value;
+    }
+
 	return new Promise(function(resolve) {
 		resolve(value);
 	});
