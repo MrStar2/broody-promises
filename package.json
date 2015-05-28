@@ -1,6 +1,6 @@
 {
   "name": "broody-promises",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Broody implementation of Promises/A+",
   "main": "./src/promise.js",
   "directories": {
@@ -26,9 +26,7 @@
     "url": "https://github.com/gobwas/broody-promises/issues"
   },
   "homepage": "https://github.com/gobwas/broody-promises",
-  "dependencies": {
-    "lodash": "^2.4.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "^1.9.1",
     "mocha": "^1.20.1",

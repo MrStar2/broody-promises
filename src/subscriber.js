@@ -1,5 +1,4 @@
-var _       = require("lodash"),
-    utils   = require("./utils"),
+var utils   = require("./utils"),
 
     resolve = utils.resolve,
     reject  = utils.reject,
@@ -23,7 +22,7 @@ Subscriber.prototype = {
         strategy = error ? reject : resolve;
         value    = error ? error  : val;
 
-        if (!_.isFunction(action)) {
+        if (!utils.isFunction(action)) {
             strategy(this.promise)(value);
             return;
         }
@@ -35,7 +34,7 @@ Subscriber.prototype = {
             return;
         }
 
-        if (response && response.then && _.isFunction(response.then)) {
+        if (response && response.then && utils.isFunction(response.then)) {
             response.then(resolve(this.promise), reject(this.promise));
         } else {
             resolve(this.promise)(response);

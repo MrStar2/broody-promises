@@ -6,7 +6,7 @@
 
 ## Whats up?
 
-Broody promises is a minimalistic implementation of Promises/A+, with ability to retreive fullfilled value.
+Broody promises is a minimalistic lightweight (~1.5KB gzipped) implementation of Promises/A+, with ability to retrieve fulfilled value.
 Of course, it is possible to do that **just** when all chain of *thens* and *catchs* are resolved synchronous.
 In other way usage of Broodies did not make any sense to you, because it has no any preferences over already existing and great Promises/A+ libraries.
 
@@ -41,19 +41,13 @@ npm install --save broody-promises
 
 ## API
 
-### new Promise(resolver, [options])
+### new Promise(resolver)
 
 #### resolver
 
 Type: `Function`
 
 The resolver function. Retreives two arguments - `resolve` and `reject`, that are functions with one argument - `value` and `error` respectively.
-
-#### options
-
-Type: `Object`
-
-Then options object.
 
 ### then(onResolve, onReject)
 
@@ -69,7 +63,7 @@ Type: `Function`
 
 Reject callack.
 
-### done()
+### ~~done()~~ -> value()
 
 Returns resolved value.
 

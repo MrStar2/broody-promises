@@ -331,7 +331,7 @@ describe("Promise", function() {
 
     });
 
-    describe("#done", function() {
+    describe("#value", function() {
 
         it("should return resolved value", function() {
             var promise, val;
@@ -342,7 +342,7 @@ describe("Promise", function() {
                 resolve(val);
             });
 
-            assert.equal(val, promise.done());
+            assert.equal(val, promise.value());
         });
 
         it("should return resolved value", function() {
@@ -364,7 +364,7 @@ describe("Promise", function() {
                 .catch(function() {
                     return val;
                 })
-                .done();
+                .value();
 
             assert.equal(value, val);
         });
@@ -377,7 +377,7 @@ describe("Promise", function() {
             promise = new Promise(function() {});
 
             try {
-                promise.done()
+                promise.value()
             } catch (_err) {
                 err = _err;
             }
@@ -395,7 +395,7 @@ describe("Promise", function() {
             promise = new Promise(function(resolve, reject) {reject(_error);});
 
             try {
-                promise.done()
+                promise.value()
             } catch (_err) {
                 err = _err;
             }
