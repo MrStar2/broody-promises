@@ -63,7 +63,7 @@ Type: `Function`
 
 Reject callack.
 
-### ~~done()~~ -> value()
+### value()
 
 Returns resolved value.
 
