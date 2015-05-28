@@ -2,38 +2,12 @@ function toStringType(obj) {
     return Object.prototype.toString.call(obj).replace(/\[object\s([a-zA-Z]+)\]/, "$1");
 }
 
-exports.resolve = function(promise) {
-    return function(value) {
-        if (!exports.isNull(promise._state)) {
-            throw new Error("Can not resolve fulfilled promise");
-        }
-
-        promise._state = true;
-        promise._value = value;
-
-        exports.forEach(promise._subscribers, function(subscriber) {
-            subscriber.resolve(value);
-        });
-    }
-};
-
-exports.reject = function(promise) {
-    return function(error) {
-        if (!exports.isNull(promise._state)) {
-            throw new Error("Can not reject fulfilled promise");
-        }
-
-        promise._state = false;
-        promise._error = error;
-
-        exports.forEach(promise._subscribers, function(subscriber) {
-            subscriber.reject(error);
-        });
-    };
-};
-
 exports.isArray = function(obj) {
     return toStringType(obj) === "Array";
+};
+
+exports.isObject = function(obj) {
+    return toStringType(obj) === "Object";
 };
 
 exports.isFunction = function(obj) {
@@ -60,7 +34,7 @@ exports.forEach = function(obj, iterator, context) {
     len = obj.length;
     for (i = 0; i < len; i++) {
         iterator.call(context, obj[i], i, obj);
-    };
+    }
 };
 
 exports.extend = function(target) {

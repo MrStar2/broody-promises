@@ -26,7 +26,9 @@
     "url": "https://github.com/gobwas/broody-promises/issues"
   },
   "homepage": "https://github.com/gobwas/broody-promises",
-  "dependencies": {},
+  "dependencies": {
+    "promises-aplus-tests": "^2.1.0"
+  },
   "devDependencies": {
     "chai": "^1.9.1",
     "mocha": "^1.20.1",
