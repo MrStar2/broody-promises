@@ -4,11 +4,11 @@ var spec = require("promises-aplus-tests"),
 describe("Promises/A+ Tests", function () {
     spec.mocha({
         resolved: function(value) {
-            return Promise.resolve(value);
+            return Promise.resolve(value, { sync: false });
         },
 
         rejected: function(reason) {
-            return Promise.reject(reason);
+            return Promise.reject(reason, { sync: false });
         },
 
         deferred: function() {
@@ -21,8 +21,8 @@ describe("Promises/A+ Tests", function () {
 
                 reject = function(reason) {
                     try { _reject(reason) } catch (err) {}
-                }
-            });
+                };
+            }, { sync: false });
 
             return {
                 promise: promise,

@@ -41,13 +41,26 @@ npm install --save broody-promises
 
 ## API
 
-### new Promise(resolver)
+### new Promise(resolver, options)
 
 #### resolver
 
 Type: `Function`
 
 The resolver function. Retreives two arguments - `resolve` and `reject`, that are functions with one argument - `value` and `error` respectively.
+
+#### options
+
+Type: `object`
+
+##### options.sync
+
+Type: `boolean`
+Default: `true`
+
+Used to switch behavior of Promise into a sync mode, when `onFullfilled` of `onRejected` callbacks in `then` chains invoked synchronously - this brings ability to use `.value()` method.
+
+> Note, that with `true` value, Broodys will not pass the 2.2.4 rule of the Promises/A+ [spec](https://promisesaplus.com).
 
 ### then(onResolve, onReject)
 
@@ -83,7 +96,7 @@ Type: `Function`
 
 Resolve/reject callack. Called with `(error, value)` signature.
 
-### Promise.all(promises)
+### Promise.all(promises, options)
 
 #### promises
 
@@ -91,7 +104,11 @@ Type: `Array`
 
 List of Promises;
 
-### Promise.resolve(value)
+#### options
+
+The same, as [Promise constructor](### new Promise(resolver, options)) options.
+
+### Promise.resolve(value, options)
 
 #### value
 
@@ -99,7 +116,11 @@ Type: `*`
 
 Return new resolved Promise.
 
-### Promise.reject(err)
+#### options
+
+The same, as [Promise constructor](### new Promise(resolver, options)) options.
+
+### Promise.reject(err, options)
 
 #### err
 
@@ -107,5 +128,7 @@ Type: `Error`
 
 Return new rejected Promise.
 
+#### options
 
+The same, as [Promise constructor](### new Promise(resolver, options)) options.
 
