@@ -6,6 +6,11 @@
 
 ## Whats up?
 
+<a href="https://promisesaplus.com/">
+    <img src="https://promisesaplus.com/assets/logo-small.png" alt="Promises/A+ logo"
+         title="Promises/A+ 1.0 compliant" align="right" />
+</a>
+
 Broody promises is a minimalistic lightweight (~1.5KB gzipped) implementation of Promises/A+, with ability to retrieve fulfilled value.
 Of course, it is possible to do that **just** when all chain of *thens* and *catchs* are resolved synchronous.
 In other way usage of Broodies did not make any sense to you, because it has no any preferences over already existing and great Promises/A+ libraries.
