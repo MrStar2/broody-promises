@@ -34,106 +34,57 @@ npm install --save broody-promises
 		resolve("my value");
 	});
 
-	chain = promise
-		.then(function(value) {
-			// again synchronous
-			return value + "!";
-		});
+	chain = Promise.sync(function() {
+		return promise
+			.then(function(value) {
+				// again synchronous
+				return value + "!";
+			});
+	});
 
-	chain.done(); // "my value!";
+	chain.result(); // my value!
 
 ```
 
 ## API
 
-### new Promise(resolver, options)
+### new Promise(resolver: Function(resolve: Function(value: any), reject: Function(reason: any)))
 
-#### resolver
+### then(onResolve: Function(value: any), onReject: Function(reason: any)) -> Promise
 
-Type: `Function`
+### catch(onReject: Function(reason: any)) -> Promise
 
-The resolver function. Retreives two arguments - `resolve` and `reject`, that are functions with one argument - `value` and `error` respectively.
+### finally(anyWay: Function(error: any, value: any)) -> Promise
 
-#### options
-
-Type: `object`
-
-##### options.sync
-
-Type: `boolean`
-Default: `true`
-
-Used to switch behavior of Promise into a sync mode, when `onFullfilled` of `onRejected` callbacks in `then` chains invoked synchronously - this brings ability to use `.value()` method.
-
-> Note, that with `true` value, Broodys will not pass the 2.2.4 rule of the Promises/A+ [spec](https://promisesaplus.com).
-
-### then(onResolve, onReject)
-
-#### onResolve
-
-Type: `Function`
-
-Resolve callack.
-
-#### onReject
-
-Type: `Function`
-
-Reject callack.
-
-### value()
+### result() -> any
 
 Returns resolved value.
 
-### catch(onReject)
+Throws an error in two cases:
+ - target promise is in `pending` state.
+ - target promise was rejected.
 
-#### onReject
+### isPending() -> Boolean
 
-Type: `Function`
+### isFulfilled() -> Boolean
 
-Reject callack.
+### isRejected() -> Boolean
 
-### finally(anyWay)
+________
 
-#### anyWay
+### Promise.sync(fn: Function()) -> any
 
-Type: `Function`
+Enters in a new context with given functon, when any `new Promise` (created synchronously) will have synchronous resolution of `onFulfilled` and `onRejected` callbacks in `.then` chains. This brings ability to use `.value()` method.
 
-Resolve/reject callack. Called with `(error, value)` signature.
+> Note, that with this feature, Broodies will not pass the 2.2.4 rule of the Promises/A+ [spec](https://promisesaplus.com).
 
-### Promise.all(promises, options)
+### Promise.all(promises: Array[Promise]) -> Promise
 
-#### promises
+### Promise.resolve(value: any) -> Promise
 
-Type: `Array`
+Returns new resolved Promise.
 
-List of Promises;
+### Promise.reject(error: any) -> Promise
 
-#### options
-
-The same, as [Promise constructor](### new Promise(resolver, options)) options.
-
-### Promise.resolve(value, options)
-
-#### value
-
-Type: `*`
-
-Return new resolved Promise.
-
-#### options
-
-The same, as [Promise constructor](### new Promise(resolver, options)) options.
-
-### Promise.reject(err, options)
-
-#### err
-
-Type: `Error`
-
-Return new rejected Promise.
-
-#### options
-
-The same, as [Promise constructor](### new Promise(resolver, options)) options.
+Returns new rejected Promise.
 
