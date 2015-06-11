@@ -48,7 +48,9 @@ npm install --save broody-promises
 
 ## API
 
-##### new Promise(`resolver`: `Function(resolve: Function(value: any)`, `reject`: `Function(reason: any)`))
+##### new Promise(`resolver`: `Function`)
+
+Where `resolver` is typed as `Function(resolve: Function(value: any), reject: Function(reason: any)`
 
 ##### then(`onResolve`: `Function(value: any)`, `onReject`: `Function(reason: any)`) -> `Promise`
 
