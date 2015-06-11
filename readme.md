@@ -48,17 +48,15 @@ npm install --save broody-promises
 
 ## API
 
-##### new Promise(`resolver`: `Function`)
+##### new Promise(`resolver`: `Function(resolve: Function(value: any), reject: Function(reason: any)`))
 
-Where `resolver` is typed as `Function(resolve: Function(value: any), reject: Function(reason: any)`
+##### promise.then(`onResolve`: `Function(value: any)`, `onReject`: `Function(reason: any)`) -> `Promise`
 
-##### then(`onResolve`: `Function(value: any)`, `onReject`: `Function(reason: any)`) -> `Promise`
+##### promise.catch(`onReject`: `Function(reason: any)`) -> `Promise`
 
-##### catch(`onReject`: `Function(reason: any)`) -> `Promise`
+##### promise.finally(`anyWay`: `Function(error: any, value: any)`) -> `Promise`
 
-##### finally(`anyWay`: `Function(error: any, value: any)`) -> `Promise`
-
-##### result() -> `any`
+##### promise.result() -> `any`
 
 Returns resolved value.
 
@@ -66,11 +64,11 @@ Throws an error in two cases:
  - target promise is in `pending` state.
  - target promise was rejected.
 
-#####isPending() -> `Boolean`
+##### promise.isPending() -> `Boolean`
 
-##### isFulfilled() -> `Boolean`
+##### promise.isFulfilled() -> `Boolean`
 
-##### isRejected() -> `Boolean`
+##### promise.isRejected() -> `Boolean`
 
 ________
 
