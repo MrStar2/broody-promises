@@ -84,7 +84,7 @@ Enters in a new context with given functon, when any `new Promise` (created sync
 
 Returns new resolved Promise.
 
-### Promise.reject(error: any) -> Promise
+##### Promise.reject(`error`: `any`) -> `Promise`
 
 Returns new rejected Promise.
 
