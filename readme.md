@@ -74,7 +74,7 @@ ________
 
 ##### Promise.sync(`fn`: `Function()`) -> `any`
 
-Enters in a new context with given functon, when any `new Promise` (created synchronously) will have synchronous resolution of `onFulfilled` and `onRejected` callbacks in `.then` chains. This brings ability to use `.value()` method.
+Enters in a new context with given functon, when any `new Promise` (created synchronously) will have synchronous resolution of `onFulfilled` and `onRejected` callbacks in `.then` chains. This brings ability to use `.result()` method.
 
 > Note, that with this feature, Broodies will not pass the 2.2.4 rule of the Promises/A+ [spec](https://promisesaplus.com).
 
